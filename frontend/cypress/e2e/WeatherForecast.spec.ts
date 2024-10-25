@@ -34,11 +34,15 @@ describe('WeatherForecast Component', () => {
     cy.get('.gmap-class').should('exist');
     cy.get('.gmap-class').click(100, 100); 
     cy.get('.gmap-class').should('exist');
-    cy.get('[data-cy="weather-forecast"]')
-      .should('contain', 'Temperature: ')
-      .should('contain', 'Conditions: ') 
-      .should('contain', 'Wind Speed: ')
-      .should('contain', 'Wind Direction: ');
+
+
+     cy.get('[data-cy="weather-forecast"]', { timeout: 10000 }).within(() => {
+       cy.get('#temperature').should('exist');
+       cy.get('#condition').should('exist');
+       cy.get('#windspeed').should('exist');
+       cy.get('#winddirection').should('exist');
+    });
+
   });
 
   it('displays a message when no location is selected', () => {

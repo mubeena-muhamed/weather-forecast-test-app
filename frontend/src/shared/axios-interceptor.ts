@@ -4,8 +4,10 @@ import axios, { InternalAxiosRequestConfig } from 'axios';
 const TIMEOUT = 1000000;
 
 const onRequestSuccess = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
+  const backendPort = process.env.VUE_APP_BACKEND_API_PORT || 4000;
+  const backendApiUrl = process.env.VUE_APP_BACKEND_API_URL;
+  config.url = `${backendApiUrl}:${backendPort}/${config.url}`;
   config.timeout = TIMEOUT;
-  config.url = `${process.env.VUE_APP_BACKEND_API_URL}/${config.url}`;
   return config;
 };
 

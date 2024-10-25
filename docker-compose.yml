@@ -1,0 +1,46 @@
+version: '3.3'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - '${VUE_APP_BACKEND_API_PORT}:${VUE_APP_BACKEND_API_PORT}'
+    volumes:
+      - ./backend:/app
+    environment:
+      - VUE_APP_BACKEND_API_PORT
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - '8080:80'
+    volumes:
+      - ./frontend:/app
+    environment:
+    - VUE_APP_BACKEND_API_PORT=${VUE_APP_BACKEND_API_PORT}
+    - NODE_ENV=development
+    networks:
+      - app-network
+
+  cypress:
+    image: cypress/included:13.3.0
+    working_dir: /e2e
+    volumes:
+      - ./frontend:/e2e
+    depends_on:
+      - frontend
+    environment:
+      - CYPRESS_FRONTEND_BASE_URL=http://frontend:80
+    command: ["cypress", "run"]
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

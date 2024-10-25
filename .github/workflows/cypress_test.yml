@@ -1,0 +1,55 @@
+name: CI Pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code from the repository
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+
+      # Step 3: Install dependencies for the Backend server
+      - name: Install Backend Dependencies
+        run: |
+          cd backend
+          yarn
+
+      # Step 4: Start the Backend server
+      - name: Start Backend Server
+        run: |
+          cd backend
+          yarn serve &
+          sleep 10
+
+      # Step 5: Install dependencies for the Frontend server
+      - name: Install Frontend Dependencies
+        run: |
+          cd frontend
+          yarn
+
+      # Step 6: Start the Frontend server
+      - name: Start Frontend Server
+        run: |
+          cd frontend
+          yarn serve &
+          sleep 10
+
+      # Step 7: Run Cypress Tests
+      - name: Run Cypress Tests
+        run: |
+          cd frontend
+          yarn run cypress run --config baseUrl=http://localhost:8080
+        env:
+          CI: true

@@ -8,7 +8,7 @@
 
 
 
-            <h3 class="mb-4 text-2xl text-center">Weather Forecast for City</h3>
+            <h3 class="mb-4 text-2xl text-center">Weather Forecast for City 123</h3>
             <div v-if="errorMessage" class="text-red-600 text-center">{{ errorMessage }}</div>
             <div v-else-if="weatherForecast">
               <div class="text-center">
